@@ -1,0 +1,36 @@
+# Environnement de développement virtuel
+env/
+*.env
+*.env-cache
+.python-version
+
+# Fichiers compilés
+__pycache__/
+*.pyc
+*.pyo
+
+# Fichiers de base de données
+db.sqlite3
+*sqlite3
+
+# Fichiers de configuration locale
+local_settings.py
+
+# Fichiers de journaux
+*.log
+*.log.1
+*.log.2
+
+# Dossiers de médias statiques
+media/
+static/
+
+# Dossiers de tests
+tests/
+
+# Fichiers de documentation
+docs/
+
+# Fichiers temporaires
+*~
+#*.swp
