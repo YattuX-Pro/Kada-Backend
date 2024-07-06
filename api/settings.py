@@ -150,10 +150,7 @@ SIMPLE_JWT = {
     'BLACKLIST_AFTER_ROTATION': True,
 }
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:4200",
-    "http://127.0.0.1:4200",
-]
+CORS_ALLOWED_ORIGINS = env.list('CORS_ALLOWED_ORIGINS')
 
 FAKER_LOCALE = None     # settings.LANGUAGE_CODE is loaded
 FAKER_PROVIDERS = None  # faker.DEFAULT_PROVIDERS is loaded (all)
