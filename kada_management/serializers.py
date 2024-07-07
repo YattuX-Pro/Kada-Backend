@@ -15,7 +15,7 @@ class ClientSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Client
-        fields = ['id', 'nom', 'prenom', 'email', 'phone', 'telephones']
+        fields = ['id', 'nom', 'prenom', 'email', 'phone', 'telephones', 'client_fullname']
 
 
 class DiagnosticSerializer(serializers.ModelSerializer):
@@ -57,17 +57,12 @@ class OutilSerializer(serializers.ModelSerializer):
         fields = ['id', 'nom', 'description']
 
 class ReparationSerializer(serializers.ModelSerializer):
-    telephone = TelephoneSerializer(read_only=True)
-    pannes = PanneSerializer(many=True, read_only=True)
-    outils_utilises = OutilSerializer(many=True, read_only=True)
-
     class Meta:
         model = Reparation
-        fields = ['id', 'telephone', 'date_debut', 'date_fin', 'pannes', 'outils_utilises', 'commentaires']
+        fields = ['id', 'telephone', 'date_debut', 'date_fin','commentaires', 'telephone_detail' , 'numero_reparation']
 
 class FactureSerializer(serializers.ModelSerializer):
-    reparation = ReparationSerializer(read_only=True)
 
     class Meta:
         model = Facture
-        fields = ['id', 'reparation', 'date', 'montant_total']
+        fields = ['id', 'reparation', 'date', 'montant_total', 'client', 'numero_fature', 'numero_reparation']

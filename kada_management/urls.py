@@ -6,7 +6,8 @@ from .views import (
     PanneListCreateView, PanneDetailView,
     OutilListCreateView, OutilDetailView,
     ReparationListCreateView, ReparationDetailView,
-    FactureListCreateView, FactureDetailView
+    FactureListCreateView, FactureDetailView,
+    ReparationWithouFactureView
 )
 
 urlpatterns = [
@@ -27,6 +28,7 @@ urlpatterns = [
 
     path('reparations/', ReparationListCreateView.as_view(), name='reparation-list-create'),
     path('reparations/<int:pk>/', ReparationDetailView.as_view(), name='reparation-detail'),
+    path('reparations_facture/', ReparationWithouFactureView.as_view(), name='repation_facture'),
 
     path('factures/', FactureListCreateView.as_view(), name='facture-list-create'),
     path('factures/<int:pk>/', FactureDetailView.as_view(), name='facture-detail'),
