@@ -2,6 +2,7 @@ from pathlib import Path
 from datetime import timedelta
 import datetime
 import environ 
+from django.contrib.auth import get_user_model
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -29,7 +30,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
-    'authentication',
     'kada_management',
     'django_filters',
     'corsheaders',
@@ -39,15 +39,18 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
 #     "DEFAULT_AUTHENTICATION_CLASSES" : [
 #        'rest_framework.authentication.SessionAuthentication',
-#        "api.authentication.TokenAuthentication",
+#        "kada_management.authentication.TokenAuthentication",
 #        "rest_framework_simplejwt.authentication.JWTAuthentication"
 #    ],
 #    "DEFAULT_PERMISSION_CLASSES" : [
-#        "rest_framework.permissions.IsAuthenticatedOrReadOnly"
+#        "rest_framework.permissions.IsAuthenticated"
 #    ],
     "DEFAULT_PAGINATION_CLASS" : "rest_framework.pagination.LimitOffsetPagination",
     "PAGE_SIZE" : 5
 }
+
+
+AUTH_USER_MODEL = 'kada_management.CustomUser'
 
 SIMPLE_JWT = {
         "AUTH_HEADER_TYPES" : ["Bearer"],
@@ -151,6 +154,3 @@ SIMPLE_JWT = {
 }
 
 CORS_ALLOWED_ORIGINS = env.list('CORS_ALLOWED_ORIGINS')
-
-FAKER_LOCALE = None     # settings.LANGUAGE_CODE is loaded
-FAKER_PROVIDERS = None  # faker.DEFAULT_PROVIDERS is loaded (all)

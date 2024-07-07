@@ -1,7 +1,15 @@
 from rest_framework import generics
 from rest_framework import filters
-from .models import Client, Telephone, Diagnostic, Panne, Outil, Reparation, Facture
-from .serializers import ClientSerializer, TelephoneSerializer, DiagnosticSerializer, PanneSerializer, OutilSerializer, ReparationSerializer, FactureSerializer
+from .models import Client, Telephone, Diagnostic, Panne, Outil, Reparation, Facture, CustomUser
+from .serializers import ClientSerializer, TelephoneSerializer, DiagnosticSerializer, PanneSerializer, OutilSerializer, ReparationSerializer, FactureSerializer, CustomUserSerializer
+
+class UserListCreateView(generics.ListCreateAPIView):
+    queryset = CustomUser.objects.all()
+    serializer_class = CustomUserSerializer
+
+class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = CustomUser.objects.all()
+    serializer_class = CustomUserSerializer
 
 class ClientListCreateView(generics.ListCreateAPIView):
     queryset = Client.objects.order_by('-created_time')

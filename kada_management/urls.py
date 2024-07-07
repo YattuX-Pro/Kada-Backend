@@ -1,4 +1,11 @@
 from django.urls import path
+from rest_framework.authtoken.views import obtain_auth_token
+
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
+
 from .views import (
     ClientListCreateView, ClientDetailView,
     TelephoneListCreateView, TelephoneDetailView,
@@ -7,10 +14,19 @@ from .views import (
     OutilListCreateView, OutilDetailView,
     ReparationListCreateView, ReparationDetailView,
     FactureListCreateView, FactureDetailView,
-    ReparationWithouFactureView
+    ReparationWithouFactureView, UserListCreateView,
+    UserDetailView
 )
 
 urlpatterns = [
+    path("api/auth/", obtain_auth_token),
+
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+
+    path('users/', UserListCreateView.as_view(), name='user-list-create'),
+    path('users/<int:pk>/', UserDetailView.as_view(), name='user-detail'),
+
     path('clients/', ClientListCreateView.as_view(), name='client-list-create'),
     path('clients/<int:pk>/', ClientDetailView.as_view(), name='client-detail'),
 
