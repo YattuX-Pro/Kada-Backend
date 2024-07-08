@@ -1,10 +1,26 @@
 from rest_framework import serializers
+from django.utils import timezone
+from datetime import timedelta
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from .models import Client, Telephone, Diagnostic, Panne, Outil, Reparation, Facture, CustomUser
 
 class CustomUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = ['id', 'email', 'role', 'is_active', 'is_staff']
+
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+
+        token['email'] = user.email
+        token['nom'] = user.nom
+        token['prenom'] = user.prenom
+        token['role'] = user.role
+
+        return token
 
 class TelephoneSerializer(serializers.ModelSerializer):
 

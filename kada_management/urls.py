@@ -15,14 +15,14 @@ from .views import (
     ReparationListCreateView, ReparationDetailView,
     FactureListCreateView, FactureDetailView,
     ReparationWithouFactureView, UserListCreateView,
-    UserDetailView
+    UserDetailView, CustomTokenObtainPairView
 )
 
 urlpatterns = [
-    path("api/auth/", obtain_auth_token),
+    path("auth/", obtain_auth_token),
 
-    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('token/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 
     path('users/', UserListCreateView.as_view(), name='user-list-create'),
     path('users/<int:pk>/', UserDetailView.as_view(), name='user-detail'),

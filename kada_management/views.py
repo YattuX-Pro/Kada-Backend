@@ -1,11 +1,20 @@
 from rest_framework import generics
 from rest_framework import filters
+from rest_framework_simplejwt.views import TokenObtainPairView
+
+
 from .models import Client, Telephone, Diagnostic, Panne, Outil, Reparation, Facture, CustomUser
 from .serializers import ClientSerializer, TelephoneSerializer, DiagnosticSerializer, PanneSerializer, OutilSerializer, ReparationSerializer, FactureSerializer, CustomUserSerializer
+from .serializers import CustomTokenObtainPairSerializer
+
+class CustomTokenObtainPairView(TokenObtainPairView):
+    serializer_class = CustomTokenObtainPairSerializer
 
 class UserListCreateView(generics.ListCreateAPIView):
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['nom','prenom']
 
 class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = CustomUser.objects.all()

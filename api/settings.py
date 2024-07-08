@@ -1,8 +1,6 @@
 from pathlib import Path
 from datetime import timedelta
-import datetime
 import environ 
-from django.contrib.auth import get_user_model
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -37,14 +35,14 @@ INSTALLED_APPS = [
 
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
-#     "DEFAULT_AUTHENTICATION_CLASSES" : [
-#        'rest_framework.authentication.SessionAuthentication',
-#        "kada_management.authentication.TokenAuthentication",
-#        "rest_framework_simplejwt.authentication.JWTAuthentication"
-#    ],
-#    "DEFAULT_PERMISSION_CLASSES" : [
-#        "rest_framework.permissions.IsAuthenticated"
-#    ],
+    "DEFAULT_AUTHENTICATION_CLASSES" : [
+       'rest_framework.authentication.SessionAuthentication',
+       "kada_management.authentication.TokenAuthentication",
+       "rest_framework_simplejwt.authentication.JWTAuthentication"
+   ],
+   "DEFAULT_PERMISSION_CLASSES" : [
+       "rest_framework.permissions.IsAuthenticated"
+   ],
     "DEFAULT_PAGINATION_CLASS" : "rest_framework.pagination.LimitOffsetPagination",
     "PAGE_SIZE" : 5
 }
@@ -54,8 +52,8 @@ AUTH_USER_MODEL = 'kada_management.CustomUser'
 
 SIMPLE_JWT = {
         "AUTH_HEADER_TYPES" : ["Bearer"],
-        "ACCESS_TOKEN_LIFETIME" : datetime.timedelta(seconds=30),
-        "REFRESH_TOKEN_LIFETIME" : datetime.timedelta(minutes=1),
+        "ACCESS_TOKEN_LIFETIME" : timedelta(hours=24),
+        "REFRESH_TOKEN_LIFETIME" : timedelta(hours=24),
     }
 
 MIDDLEWARE = [
@@ -146,11 +144,6 @@ MEDIA_ROOT = BASE_DIR / 'mediafiles'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
-    'ROTATE_REFRESH_TOKENS': False,
-    'BLACKLIST_AFTER_ROTATION': True,
-}
-
 CORS_ALLOWED_ORIGINS = env.list('CORS_ALLOWED_ORIGINS')
+
+CORS_ALLOW_CREDENTIALS = True
