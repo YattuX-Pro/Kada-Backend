@@ -7,7 +7,7 @@ from .models import Client, Telephone, Diagnostic, Panne, Outil, Reparation, Fac
 class CustomUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ['id', 'email', 'role', 'is_active', 'is_staff']
+        fields = ['id', 'email','nom','prenom', 'role', 'is_active', 'is_staff']
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     
