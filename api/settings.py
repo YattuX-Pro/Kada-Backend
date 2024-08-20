@@ -43,8 +43,8 @@ REST_FRAMEWORK = {
    "DEFAULT_PERMISSION_CLASSES" : [
        "rest_framework.permissions.IsAuthenticated"
    ],
-    "DEFAULT_PAGINATION_CLASS" : "rest_framework.pagination.LimitOffsetPagination",
-    "PAGE_SIZE" : 5
+    "DEFAULT_PAGINATION_CLASS" : "kada_management.filters.CustomLimitOffsetPagination",
+    "PAGE_SIZE" : 4
 }
 
 

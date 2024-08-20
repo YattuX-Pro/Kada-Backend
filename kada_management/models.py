@@ -29,9 +29,10 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     nom = models.CharField(max_length=255)
     prenom = models.CharField(max_length=255)
     email = models.EmailField(unique=True)
-    role = models.CharField(max_length=255)
     is_active = models.BooleanField(default=True)
-    is_staff = models.BooleanField(default=False)
+    is_staff = models.BooleanField(default=True)
+    is_commercial = models.BooleanField(default=False)
+    is_technician = models.BooleanField(default=False)
 
     objects = CustomUserManager()
 
@@ -73,8 +74,15 @@ class Telephone(CommonInfo):
     @property
     def client_name(self):
         return f'{self.client.prenom} {self.client.nom} - {self.client.phone}'
+    
 
 class Diagnostic(CommonInfo):
+    DIAGNOSTIC_TYPE_CHOICES = [
+        ('initial', 'Initial'),
+        ('technicien', 'Technicien'),
+        ('final', 'Final'),
+    ]
+     
     telephone = models.ForeignKey(Telephone, on_delete=models.CASCADE)
     micro = models.BooleanField()
     haut_parleur = models.BooleanField()
@@ -90,36 +98,56 @@ class Diagnostic(CommonInfo):
     boutons_volume = models.BooleanField()
     conver = models.BooleanField()
     torche = models.BooleanField()
-    is_avant_reparation = models.BooleanField()
+    diagnostic_type = models.CharField(max_length=20, choices=DIAGNOSTIC_TYPE_CHOICES)
+    numero_diagnostic = models.CharField(max_length=15, unique=True, blank=True, null=True)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Diagnostic {self.id} - {self.telephone}"
+        return f"Diagnostic {self.id} - {self.telephone} - {self.diagnostic_type}"
     
     def telephone_name(self):
         return f"{self.telephone.client.prenom}-{self.telephone.marque}-{self.telephone.imei}"
+    
+    @property
+    def owner(self):
+        return f"{self.user.nom} {self.user.prenom}"
+    
+    def save(self, *args, **kwargs):
+        if not self.numero_diagnostic:
+            self.numero_diagnostic = self.generate_unique_numero_diagnostic()
+        super(Diagnostic, self).save(*args, **kwargs)
+
+    def generate_unique_numero_diagnostic(self):
+        while True:
+            numero_diagnostic = 'DIAG-' + ''.join(random.choices(string.digits, k=10))
+            if not Reparation.objects.filter(numero_reparation=numero_diagnostic).exists():
+                break
+        return numero_diagnostic.upper()
    
 
-class Panne(CommonInfo):
-    telephone = models.ForeignKey(Telephone, on_delete=models.CASCADE)
-    description = models.TextField()
-
-    def __str__(self):
-        return f"Panne {self.id} - {self.telephone}"
-
-class Outil(CommonInfo):
-    nom = models.CharField(max_length=255)
-    description = models.TextField(blank=True, null=True)
-
-    def __str__(self):
-        return self.nom
-
 class Reparation(CommonInfo):
+    DIAGNOSTIC_STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('created', 'Created'),
+        ('accepted', 'Accepted'),
+        ('declined', 'Declined'),
+        ('completed', 'Completed'),
+        ('canceled', 'Canceled'),
+        ('suspended', 'Suspended')
+    ]
+
     telephone = models.ForeignKey(Telephone, on_delete=models.CASCADE)
-    date_debut = models.DateTimeField(auto_now_add=True)
+    commercial = models.ForeignKey(CustomUser, related_name='reparations_as_commercial', on_delete=models.CASCADE)
+    technician = models.ForeignKey(CustomUser, related_name='reparations_as_technician', on_delete=models.CASCADE, null=True, blank=True)
+    initial_diagnostic = models.ForeignKey(Diagnostic, related_name='initial_diagnostic', on_delete=models.CASCADE)
+    technician_diagnostic = models.ForeignKey(Diagnostic, related_name='technician_diagnostic', on_delete=models.CASCADE, null=True, blank=True)
+    final_diagnostic = models.ForeignKey(Diagnostic, related_name='final_diagnostic', on_delete=models.CASCADE, null=True, blank=True)
+    date_debut = models.DateTimeField(blank=True, null=True)
     date_fin = models.DateTimeField(blank=True, null=True)
     commentaires = models.TextField(blank=True, null=True)
     numero_reparation = models.CharField(max_length=15, unique=True, blank=True, null=True)
+    status = models.CharField(max_length=20, choices=DIAGNOSTIC_STATUS_CHOICES, default='created')
 
     def __str__(self):
         return f"Reparation {self.id} - {self.telephone}"
@@ -163,10 +191,14 @@ class Facture(CommonInfo):
     
     @property
     def client(self):
-        return f"{self.reparation.telephone.client.nom} {self.reparation.telephone.client.prenom}"
+        return f"{self.reparation.telephone.client.prenom} {self.reparation.telephone.client.nom}"
     
     @property
     def numero_reparation(self):
         return f"{self.reparation.numero_reparation}"
+    
+    @property
+    def numero_telephone(self):
+        return f"{self.reparation.telephone.client.phone}"
     
     
