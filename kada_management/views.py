@@ -190,8 +190,8 @@ class UserCount(APIView):
     def get(self, request):
 
         admins = CustomUser.objects.filter(is_superuser = True).count()
-        technicians = CustomUser.objects.filter(is_superuser = True).count()
-        sellers = CustomUser.objects.filter(is_superuser = True).count()
+        technicians = CustomUser.objects.filter(is_technician = True).count()
+        sellers = CustomUser.objects.filter(is_commercial = True).count()
         clients = Client.objects.all().count()
 
         data = {
