@@ -86,9 +86,6 @@ class ReparationListCreateView(generics.ListCreateAPIView):
     search_fields = ['numero_reparation','status']
 
     def get_queryset(self):
-        if(self.request.user.is_commercial):
-            return Reparation.objects.filter(commercial=self.request.user).order_by('-created_time')
-
         if(self.request.user.is_technician):
             return Reparation.objects.filter(technician=self.request.user).order_by('-created_time')
         return Reparation.objects.filter().order_by('-created_time')
@@ -99,12 +96,9 @@ class ReparationWithouFactureView(generics.ListAPIView):
     serializer_class = ReparationSerializer
 
     def get_queryset(self):
-        if(self.request.user.is_commercial):
-            return Reparation.objects.filter(facture__isnull=True, status="completed", commercial=self.request.user).order_by('-created_time')
-
         if(self.request.user.is_technician):
             return Reparation.objects.filter(facture__isnull=True, status="completed",technician=self.request.user).order_by('-created_time')
-        return Reparation.objects.filter().order_by('-created_time')
+        return Reparation.objects.filter(facture__isnull=True, status="completed").order_by('-created_time')
     
 
 class ReparationDetailView(generics.RetrieveUpdateDestroyAPIView):
@@ -192,13 +186,13 @@ class UserCount(APIView):
         admins = CustomUser.objects.filter(is_superuser = True).count()
         technicians = CustomUser.objects.filter(is_technician = True).count()
         sellers = CustomUser.objects.filter(is_commercial = True).count()
-        clients = Client.objects.all().count()
+        reparations = Reparation.objects.all().count()
 
         data = {
             'admins': admins,
             'technicians': technicians,
             'sellers': sellers,
-            'clients': clients,
+            'reparations': reparations,
         }
 
         return Response(data)

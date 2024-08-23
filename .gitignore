@@ -34,3 +34,5 @@ docs/
 # Fichiers temporaires
 *~
 #*.swp
+
+migrations
