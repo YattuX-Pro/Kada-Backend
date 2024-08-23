@@ -91,7 +91,7 @@ class ReparationSerializer(serializers.ModelSerializer):
     final_diagnostic_id = serializers.PrimaryKeyRelatedField(queryset=Diagnostic.objects.all(), source='final_diagnostic',required=False, allow_null=True)
     technician_diagnostic_id = serializers.PrimaryKeyRelatedField(queryset=Diagnostic.objects.all(), source='technician_diagnostic',required=False, allow_null=True)
     telephone_id = serializers.PrimaryKeyRelatedField(queryset=Telephone.objects.all(), source='telephone', required=True)
-    technician_id = serializers.PrimaryKeyRelatedField(queryset=CustomUser.objects.all(), source='telephone', required=True)
+    technician_id = serializers.PrimaryKeyRelatedField(queryset=CustomUser.objects.all(), source='technician', required=True)
 
     initial_diagnostic = DiagnosticSerializer(read_only=True)
     final_diagnostic = DiagnosticSerializer(read_only=True)
