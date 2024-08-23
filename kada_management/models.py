@@ -33,6 +33,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=True)
     is_commercial = models.BooleanField(default=False)
     is_technician = models.BooleanField(default=False)
+    created_time = models.DateTimeField(default=timezone.now)
+    updated_time = models.DateTimeField(default=timezone.now)
 
     objects = CustomUserManager()
 

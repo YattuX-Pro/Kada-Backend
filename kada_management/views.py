@@ -23,7 +23,7 @@ class CustomTokenObtainPairView(TokenObtainPairView):
 
 
 class UserListCreateView(generics.ListCreateAPIView):
-    queryset = CustomUser.objects.all()
+    queryset = CustomUser.objects.order_by('-created_time')
     serializer_class = CustomUserSerializer
     filterset_class = UserFilters
     filter_backends = [filters.SearchFilter,DjangoFilterBackend]
