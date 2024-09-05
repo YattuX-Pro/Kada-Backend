@@ -54,8 +54,8 @@ class CommonInfo(models.Model):
 class Client(CommonInfo):
     nom = models.CharField(max_length=255)
     prenom = models.CharField(max_length=255)
-    email = models.EmailField()
-    phone = models.CharField(max_length=20)
+    whatsapp = models.CharField(max_length=20, blank=True, null=True)
+    phone = models.CharField(max_length=20, blank=True, null=True)
 
     def __str__(self):
         return f"{self.nom} {self.prenom}"

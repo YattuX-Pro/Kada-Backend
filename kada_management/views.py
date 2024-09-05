@@ -8,7 +8,7 @@ from django.db.models.functions import TruncMonth
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from datetime import timedelta
-from django.db.models import Count
+from django.db.models import Count, Q
 
 
 from kada_management.filters import UserFilters
@@ -70,7 +70,11 @@ class DiagnosticListCreateView(generics.ListCreateAPIView):
 
     def get_queryset(self):
         if(self.request.user.is_technician):
-            return Diagnostic.objects.filter(user=self.request.user).order_by('-created_time')
+            return Diagnostic.objects.filter(
+                    Q(reparation__technician=self.request.user) &
+                    (Q(reparation__initial_diagnostic__isnull=False) |
+                    Q(reparation__technician_diagnostic__isnull=False) |
+                    Q(reparation__final_diagnostic__isnull=False))).distinct()
         return Diagnostic.objects.filter().order_by('-created_time')
 
 
@@ -83,7 +87,7 @@ class ReparationListCreateView(generics.ListCreateAPIView):
     queryset = Reparation.objects.order_by('-created_time')
     serializer_class = ReparationSerializer
     filter_backends = [filters.SearchFilter]
-    search_fields = ['numero_reparation','status']
+    search_fields = ['numero_reparation','telephone__imei','telephone__client__phone','status']
 
     def get_queryset(self):
         if(self.request.user.is_technician):

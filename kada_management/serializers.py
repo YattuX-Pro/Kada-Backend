@@ -51,7 +51,15 @@ class ClientSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Client
-        fields = ['id', 'nom', 'prenom', 'email', 'phone', 'telephones', 'client_fullname']
+        fields = ['id', 'nom', 'prenom', 'whatsapp', 'phone', 'telephones', 'client_fullname']
+        extra_kwargs = {
+            'whatsapp': {
+                'required': False,
+            },
+            'phone': {
+                'required': False,
+            }
+        }
 
 
 class DiagnosticSerializer(serializers.ModelSerializer):
