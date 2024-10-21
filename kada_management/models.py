@@ -100,6 +100,12 @@ class Diagnostic(CommonInfo):
     boutons_volume = models.BooleanField()
     conver = models.BooleanField()
     torche = models.BooleanField()
+    flash = models.BooleanField()
+    camera = models.BooleanField(blank=True, null=True)
+    frp = models.BooleanField()
+    by_pass = models.BooleanField()
+    iphone_desactive = models.BooleanField()
+    flash_reseau = models.BooleanField()
     diagnostic_type = models.CharField(max_length=20, choices=DIAGNOSTIC_TYPE_CHOICES)
     numero_diagnostic = models.CharField(max_length=15, unique=True, blank=True, null=True)
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
@@ -123,7 +129,7 @@ class Diagnostic(CommonInfo):
     def generate_unique_numero_diagnostic(self):
         while True:
             numero_diagnostic = 'DIAG-' + ''.join(random.choices(string.digits, k=10))
-            if not Reparation.objects.filter(numero_reparation=numero_diagnostic).exists():
+            if not Diagnostic.objects.filter(numero_diagnostic=numero_diagnostic).exists():
                 break
         return numero_diagnostic.upper()
    

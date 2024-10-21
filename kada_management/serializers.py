@@ -89,7 +89,13 @@ class DiagnosticSerializer(serializers.ModelSerializer):
             'diagnostic_type',
             'numero_diagnostic',
             'user',
-            'owner'
+            'owner',
+            'flash',
+            'camera',
+            'frp',
+            'by_pass',
+            'iphone_desactive',
+            'flash_reseau'
         ]
         read_only_fields = ['id', 'date']
 
